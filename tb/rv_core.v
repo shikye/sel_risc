@@ -39,7 +39,7 @@ module rv_core(
     if_id if_id_ins(
         .clk                (clk),                
         .rst                (rst),
-        .hold_flag_i        (ctrl_hold_flag_i),
+        .hold_flag_i        (ctrl_hold_flag_o),
         .inst_i             (ifetch_inst_o),
         .inst_addr_i        (ifetch_inst_addr_o),
         .inst_o             (if_id_inst_o),
@@ -99,13 +99,13 @@ module rv_core(
     id_ex id_ex_ins(
         .clk                        (clk),
         .rst                        (rst),
-        .hold_flag_i                (ctrl_hold_flag_i),
         .op1_i                      (id_op1_o),
         .op2_i                      (id_op2_o),
         .inst_i                     (id_inst_o),
         .inst_addr_i                (id_inst_addr_o),
         .reg_wen_i                  (id_reg_wen),
         .rd_addr_i                  (id_rd_addr_o),
+        .hold_flag_i                (ctrl_hold_flag_o),
         .op1_o                      (id_ex_op1_o),  
         .op2_o                      (id_ex_op2_o),    
         .inst_o                     (id_ex_inst_o),      
@@ -135,9 +135,9 @@ module rv_core(
         .rd_data_o               (ex_rd_data_o),
         .reg_wen_o               (ex_reg_wen_o),
         .rd_addr_o               (ex_rd_addr_o),
-        .hold_flag_o             (ex_hold_flag_o),
         .jump_addr_o             (ex_jump_addr_o),
-        .jump_en_o               (ex_jump_en_o)
+        .jump_en_o               (ex_jump_en_o),
+        .hold_flag_o             (ex_hold_flag_o) 
     );
 
     //ex to regs
@@ -148,22 +148,23 @@ module rv_core(
     wire    [31:0]  ex_jump_addr_o;
     wire            ex_jump_en_o;
     wire            ex_hold_flag_o;
-    
+
+
     ctrl ctrl_ins(
-        .rst                (rst),
-        .jump_addr_i        (ex_jump_addr_o),
-        .jump_en_i          (ex_jump_en_o),
-        .hold_flag_i        (ex_hold_flag_o),
-        .jump_addr_o        (ctrl_jump_addr_o),
-        .jump_en_o          (ctrl_jump_en_o),
-        .hold_flag_o        (ctrl_hold_flag_o)
+        .rst                        (rst),
+        .jump_addr_i                (ex_jump_addr_o),
+        .jump_en_i                  (ex_jump_en_o),
+        .hold_flag_i                (ex_hold_flag_o),
+        .jump_addr_o                (ctrl_jump_addr_o),
+        .jump_en_o                  (ctrl_jump_en_o),
+        .hold_flag_o                (ctrl_hold_flag_o)
     );
 
-    //ctrl to pc_reg
+    //ex to if_id and id_ex
+    wire            ctrl_hold_flag_o;
+    //ex to pc_reg
     wire    [31:0]  ctrl_jump_addr_o;
     wire            ctrl_jump_en_o;
-    //ctrl to id_ex if_id
-    wire            ctrl_hold_flag_o;
 
 
 endmodule

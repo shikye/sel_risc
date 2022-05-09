@@ -1,0 +1,14 @@
+pc_reg.v
+ifetch.v
+rom.v
+if_id.v
+id.v
+regs.v
+id_ex.v
+ex.v
+ctrl.v
+rv_core.v
+rv_soc.v
+dff_set.v
+defines.v
+tb.v
