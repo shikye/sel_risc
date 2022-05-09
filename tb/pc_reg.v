@@ -1,7 +1,6 @@
 module pc_reg(
     input   wire            clk,
     input   wire            rst,
-    //from ctrl
     input   wire    [31:0]  jump_addr_i,
     input   wire            jump_en_i,
     output  reg     [31:0]  pc_o

@@ -35,7 +35,7 @@ module tb();
 
     initial begin
         $dumpfile("gtk");
-        $dumpvars(0,tb);
+        $dumpvars(0,tb.rv_soc_ins.rv_core_ins.regs_ins.regs);
     end
 
     

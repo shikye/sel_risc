@@ -41,7 +41,7 @@ module ex(
     wire[31:0]  jump_imm;
     wire        op1_i_equal_op2_i;
 
-    assign      jump_imm          = {{20{inst_i[31]}},inst_i[31],inst_i[7],inst_i[30:25],inst_i[11:8],1'b0};
+    assign      jump_imm          = {{19{inst_i[31]}},inst_i[31],inst_i[7],inst_i[30:25],inst_i[11:8],1'b0};
     assign      op1_i_equal_op2_i = (op1_i == op2_i) ? 1'b1 : 1'b0;
 
 
@@ -101,8 +101,13 @@ module ex(
                 reg_wen_o = 1'b0;
                 case(funct3)
                     `INST_BNE:begin
-                            jump_addr_o = jump_imm + inst_i;
+                            jump_addr_o = jump_imm + inst_addr_i;
                             jump_en_o   = ~op1_i_equal_op2_i;
+                            hold_flag_o = 1'b0;
+                    end
+                    `INST_BEQ:begin
+                            jump_addr_o = jump_imm + inst_addr_i;
+                            jump_en_o   = op1_i_equal_op2_i;
                             hold_flag_o = 1'b0;
                     end
 
@@ -113,6 +118,24 @@ module ex(
                         hold_flag_o = 1'b0;
                     end
                 endcase
+            end
+
+            `INST_JAL:begin
+                jump_addr_o = {{12{inst_i[31]}},inst_i[19:12],inst_i[20],inst_i[30:21],1'b0};
+                jump_en_o   = 1'b1;
+                hold_flag_o = 1'b0;
+                rd_data_o = inst_addr_i + 32'd4;
+                rd_addr_o = rd;
+                reg_wen_o = 1'b1;
+            end
+
+            `INST_LUI:begin
+                jump_addr_o = 32'b0;
+                jump_en_o   = 1'b0;
+                hold_flag_o = 1'b0;
+                rd_data_o = {inst_i[31:12],12'b0};
+                rd_addr_o = rd;
+                reg_wen_o = 1'b1;
             end
 
 
