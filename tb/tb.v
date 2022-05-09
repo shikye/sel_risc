@@ -4,6 +4,11 @@ module tb();
 
     reg clk;
     reg rst;
+    integer r;
+
+    wire x3 = tb.rv_soc_ins.rv_core_ins.regs_ins.regs[3];
+    wire x26 = tb.rv_soc_ins.rv_core_ins.regs_ins.regs[26];
+    wire x27 = tb.rv_soc_ins.rv_core_ins.regs_ins.regs[27];
 
     always#10 clk = ~clk;
 
@@ -12,24 +17,23 @@ module tb();
         clk = 1;
         #30
         rst = 1;
-        #100000
-        $finish;
     end
 
     initial begin
-        $readmemb("isa_add",tb.rv_soc_ins.rom_ins.rom_mem);
+        $readmemh("inst.data",tb.rv_soc_ins.rom_ins.rom_mem);
     end
 
     initial begin
-        while(1)begin
-            @(posedge clk) begin
-                $display("x27 value is %d",tb.rv_soc_ins.rv_core_ins.regs_ins.regs[27]);      
-                $display("x28 value is %d",tb.rv_soc_ins.rv_core_ins.regs_ins.regs[28]);      
-                $display("x29 value is %d",tb.rv_soc_ins.rv_core_ins.regs_ins.regs[29]); 
-                $display("-----------------------------------------------");
-                $display("-----------------------------------------------");
-                $display("-----------------------------------------------");
+        wait(x26);
+        if(x27 == 32'b1) begin
+            $display("#################PASS#################");
+        end
+        else begin
+            $display("#################FAIL#################");
+            for(r=0;r<32;r=r+1)begin
+                $display("%2d reg value is %d",r,tb.rv_soc_ins.rv_core_ins.regs_ins.regs[r]);
             end
+
         end
     end
 
