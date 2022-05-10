@@ -39,7 +39,7 @@ module rv_core(
     if_id if_id_ins(
         .clk                (clk),                
         .rst                (rst),
-        .hold_flag_i        (ctrl_hold_flag_i),
+        .hold_flag_i        (ctrl_hold_flag_o),
         .inst_i             (ifetch_inst_o),
         .inst_addr_i        (ifetch_inst_addr_o),
         .inst_o             (if_id_inst_o),
@@ -99,7 +99,7 @@ module rv_core(
     id_ex id_ex_ins(
         .clk                        (clk),
         .rst                        (rst),
-        .hold_flag_i                (ctrl_hold_flag_i),
+        .hold_flag_i                (ctrl_hold_flag_o),
         .op1_i                      (id_op1_o),
         .op2_i                      (id_op2_o),
         .inst_i                     (id_inst_o),

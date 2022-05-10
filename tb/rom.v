@@ -4,7 +4,7 @@ module rom(
 );
 
 
-    reg [31:0]  rom_mem[0:11];
+    reg [31:0]  rom_mem[0:1023];
 
     always@(*) begin
         inst_o = rom_mem[inst_addr_i>>2];

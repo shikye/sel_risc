@@ -24,7 +24,9 @@ module tb();
     end
 
     initial begin
+        #10
         wait(x26);
+        #40
         if(x27 == 32'b1) begin
             $display("#################PASS#################");
         end
@@ -35,6 +37,8 @@ module tb();
             end
 
         end
+
+        $finish;
     end
 
     initial begin
