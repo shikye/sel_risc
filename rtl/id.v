@@ -110,6 +110,15 @@ module id(
                     end
                 endcase
             end
+
+            `INST_JALR:begin
+                rs1_addr_o  = rs1;
+                rs2_addr_o  = 5'b0;
+                op1_o       = rs1_data_i;
+                op2_o       = 32'b0;
+                reg_wen     = 1'b1;
+                rd_addr_o   = rd;
+            end
             
             `INST_JAL:begin
                 rs1_addr_o  = 5'b0;
@@ -119,6 +128,16 @@ module id(
                 reg_wen     = 1'b1;
                 rd_addr_o   = rd;
             end
+
+            `INST_AUIPC:begin
+                rs1_addr_o  = 5'b0;
+                rs2_addr_o  = 5'b0;
+                op1_o       = 32'b0;
+                op2_o       = 32'b0;
+                reg_wen     = 1'b1;
+                rd_addr_o   = rd;
+            end
+            
 
             `INST_LUI:begin
                 rs1_addr_o  = 5'b0;

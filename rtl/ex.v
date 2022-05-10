@@ -80,7 +80,7 @@ module ex(
                             reg_wen_o = reg_wen_i;
                         end 
                         else begin
-                            rd_data_o = op2_i - op1_i;
+                            rd_data_o = op1_i - op2_i;
                             rd_addr_o = rd;
                             reg_wen_o = reg_wen_i;
                         end
@@ -120,8 +120,9 @@ module ex(
                 endcase
             end
 
-            `INST_JAL:begin
-                jump_addr_o = {{12{inst_i[31]}},inst_i[19:12],inst_i[20],inst_i[30:21],1'b0};
+
+            `INST_JALR:begin
+                jump_addr_o = {{20{inst_i[31]}},inst_i[31:20]} + op1_i;
                 jump_en_o   = 1'b1;
                 hold_flag_o = 1'b0;
                 rd_data_o = inst_addr_i + 32'd4;
@@ -129,11 +130,32 @@ module ex(
                 reg_wen_o = 1'b1;
             end
 
+            `INST_JAL:begin
+                jump_addr_o = {{12{inst_i[31]}},inst_i[19:12],inst_i[20],inst_i[30:21],1'b0} + inst_addr_i;
+                jump_en_o   = 1'b1;
+                hold_flag_o = 1'b0;
+                rd_data_o = inst_addr_i + 32'd4;
+                rd_addr_o = rd;
+                reg_wen_o = 1'b1;
+            end
+
+
+
             `INST_LUI:begin
                 jump_addr_o = 32'b0;
                 jump_en_o   = 1'b0;
                 hold_flag_o = 1'b0;
                 rd_data_o = {inst_i[31:12],12'b0};
+                rd_addr_o = rd;
+                reg_wen_o = 1'b1;
+            end
+
+
+            `INST_AUIPC:begin
+                jump_addr_o = 32'b0;
+                jump_en_o   = 1'b0;
+                hold_flag_o = 1'b0;
+                rd_data_o = {inst_i[31:12],12'b0} + inst_addr_i;
                 rd_addr_o = rd;
                 reg_wen_o = 1'b1;
             end
