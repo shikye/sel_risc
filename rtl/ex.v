@@ -40,10 +40,13 @@ module ex(
     //TYPE_J
     wire[31:0]  jump_imm;
     wire        op1_i_equal_op2_i;
+    wire        uns_op1_i_lt_op2_i;
+    wire        s_op1_i_lt_op2_i;
 
     assign      jump_imm          = {{19{inst_i[31]}},inst_i[31],inst_i[7],inst_i[30:25],inst_i[11:8],1'b0};
     assign      op1_i_equal_op2_i = (op1_i == op2_i) ? 1'b1 : 1'b0;
-
+    assign      uns_op1_i_lt_op2_i = (op1_i < op2_i) ? 1'b1 : 1'b0;
+    assign      s_op1_i_lt_op2_i  = ($signed(op1_i) < $signed(op2_i)) ? 1'b1:1'b0;
 
     always@(*) begin
         
@@ -110,6 +113,27 @@ module ex(
                             jump_en_o   = op1_i_equal_op2_i;
                             hold_flag_o = 1'b0;
                     end
+                    `INST_BLT:begin
+                            jump_addr_o = jump_imm + inst_addr_i;
+                            jump_en_o   = s_op1_i_lt_op2_i;
+                            hold_flag_o = 1'b0;
+                    end
+                    `INST_BGE:begin
+                            jump_addr_o = jump_imm + inst_addr_i;
+                            jump_en_o   = ~s_op1_i_lt_op2_i;
+                            hold_flag_o = 1'b0;
+                    end
+                    `INST_BLTU:begin
+                            jump_addr_o = jump_imm + inst_addr_i;
+                            jump_en_o   = uns_op1_i_lt_op2_i;
+                            hold_flag_o = 1'b0;
+                    end
+                    `INST_BGEU:begin
+                            jump_addr_o = jump_imm + inst_addr_i;
+                            jump_en_o   = ~uns_op1_i_lt_op2_i;
+                            hold_flag_o = 1'b0;
+                    end
+                    
 
 
                     default:begin

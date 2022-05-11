@@ -20,7 +20,7 @@ module tb();
     end
 
     initial begin
-        $readmemh("../isa/mem/rv32ui-p-auipc.inst",tb.rv_soc_ins.rom_ins.rom_mem);
+        $readmemh("../isa/mem/rv32ui-p-jalr.inst",tb.rv_soc_ins.rom_ins.rom_mem);
     end
 
     initial begin
